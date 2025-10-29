@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Focus Flow</title>
+  <style>
+  * {margin: 0;padding: 0;box-sizing: border-box;font-family: Inter, system-ui, sans-serif;}
+  html { scroll-behavior: smooth; }
+    body {background: #f9fafb;color: #0b2447;}
+    .navbar {width: 100%;background-color: #0b2447;color: #fff;position: fixed;top: 0;left: 0;z-index: 100;border-bottom: 4px solid #00bfa6;}
+    .nav-container {width: 1440px;max-width: 90%;margin: auto;padding: 14px 0;display: flex;justify-content: space-between;align-items: center;}
+    .logo {display: flex;align-items: center;gap: 10px;}
+    .logo img {width: 42px;height: 42px;border-radius: 50%;background: #fff;padding: 4px;}
+    .logo span {font-size: 1.2rem;font-weight: 600;color: #ffffff;}
+    nav ul {display: flex;list-style: none;gap: 35px;position: relative;}
+    nav ul li a {text-decoration: none;color: #e0e0e0;font-weight: 500;font-size: 1rem;padding: 8px 0;position: relative;transition: color 0.3s ease;}
+    nav ul li a:hover,nav ul li a.active {color: #00bfa6;}
+    .underline {position: absolute;bottom: -6px;height: 3px;background-color: #00bfa6;border-radius: 2px;left: 0;width: 0;transition: all 0.4s ease;}
+    .hero {width: 100%;background-color: #0b2447;color: #fff;text-align: center;padding: 120px 20px 80px;margin-top: 70px;}
+    .hero h1 {font-size: 2.2rem;margin-bottom: 20px;}
+    .hero-buttons {display: flex;justify-content: center;gap: 20px;margin-top: 20px;}
+    .hero-buttons button {background-color: #00bfa6;color: white;border: none;padding: 12px 32px;border-radius: 30px;font-size: 1rem;cursor: pointer;font-weight: 600;transition: all 0.3s ease;box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);}
+    .hero-buttons button:hover {transform: translateY(-3px);box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);}
+    .hero-buttons .secondary {background-color: #ffffff;color: #0b2447;border: 2px solid #0b2447;}
+    .hero-buttons .secondary:hover {background-color: #e0e0e0;transform: translateY(-3px);}
+    .timer-section {display: flex;justify-content: center;align-items: flex-start;gap: 40px;margin: 60px auto;width: 90%;max-width: 1440px;}
+    .timer-card {background: #fff;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);border-radius: 12px;padding: 30px;flex: 1;max-width: 480px;text-align: center;position: relative;}
+    .timer-card h1 {font-size: 20px;margin-bottom: 10px;color: #1e293b;}
+    .time {font-size: 64px;font-weight: 700;margin: 20px 0;color: #0f172a;display: flex;align-items: center;justify-content: center;gap: 8px;}
+    .edit-icon {cursor: pointer;font-size: 18px;color: #64748b;transition: 0.2s;}
+    .edit-icon:hover {color: #0f172a;}
+    .edit-panel {display: none;margin-top: 10px;background: #f1f5f9;padding: 10px;border-radius: 8px;text-align: center;}
+    .controls {display: flex;justify-content: center;align-items: center;gap: 10px;flex-wrap: nowrap;}
+    .controls button {background-color: #00bfa6;color: white;border: none;padding: 12px 32px;border-radius: 30px;font-size: 1rem;cursor: pointer;font-weight: 600;transition: all 0.3s ease;box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);margin: 6px 0;}
+    .controls button:hover {transform: translateY(-3px);box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);}
+    .controls .secondary {background-color: #ffffff;color: #0b2447;border: 2px solid #0b2447;}
+    .controls .secondary:hover {background-color: #e0e0e0;transform: translateY(-3px);}
+    .status {color: #64748b;font-size: 14px;margin-top: 10px;}
+    input[type=number] {width: 60px;padding: 6px;border: 1px solid #cbd5e1;border-radius: 6px;text-align: center;font-size: 16px;}
+    #apply {background: #0f172a;color: #fff;border: none;border-radius: 6px;padding: 6px 10px;margin-left: 8px;cursor: pointer;}
+    #apply:hover {background: #1e293b;}
+    .question-log {margin-top: 15px;text-align: left;font-size: 14px;color: #0b2447;}
+    /* Task manager styles (scoped) - taken from Task manager.txt */
+    .tasks-section {
+      background: #ffffff;
+      /* match timer-card visuals */
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      width: 90%;
+      max-width: 480px; /* match timer-card max width */
+      margin: 0; /* no extra top margin when inside .tasks-row; row controls spacing */
+      align-self: flex-start; /* ensure top alignment within the row */
+    }
+
+    .tasks-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .tasks-header h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #0b2447;
+    }
+
+    .tasks-header button {
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px; /* pill-shaped like timer buttons */
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .tasks-header button:hover {
+      background-color: #dc2626;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+
+    .task-input {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .task-input input {
+      flex: 1;
+      padding: 10px 14px;
+      font-size: 1rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      outline: none;
+      transition: border 0.3s ease;
+    }
+
+    .task-input input:focus {
+      border-color: #00bfa6;
+    }
+
+    .task-input button {
+      background-color: #00bfa6;
+      color: white;
+      border: none;
+      padding: 12px 32px; /* match timer control sizing */
+      border-radius: 30px; /* pill-shaped */
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .task-input button:hover {
+      background-color: #00a892;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+
+    .task-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .task-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f1f5f9;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+      cursor: grab;
+      border: 2px solid transparent;
+    }
+
+    .task-item.completed {
+      text-decoration: line-through;
+      color: #6b7280;
+      background-color: #e0f2f1;
+    }
+
+    .task-item.selected {
+      border: 2px solid #00bfa6;
+      background-color: #ecfdf5;
+    }
+
+    .task-item:hover {
+      background: #e2e8f0;
+    }
+
+    .task-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+
+    /* Larger, clearer checkbox for tasks */
+    .task-info .done-checkbox {
+      width: 20px;
+      height: 20px;
+      transform: scale(1.3);
+      -webkit-transform: scale(1.3);
+      margin-right: 8px;
+      vertical-align: middle;
+      accent-color: #00bfa6; /* modern browsers: match Add button color */
+      cursor: pointer;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .task-actions button, .edit-btn {
+      border: none;
+      border-radius: 30px; /* pill-shaped */
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    }
+
+    .delete-btn {
+      background-color: #ef4444;
+      color: white;
+    }
+
+    .delete-btn:hover {
+      background-color: #dc2626;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+
+    .edit-btn {
+      background-color: #0b2447;
+      color: white;
+    }
+
+    .edit-btn:hover {
+      background-color: #1e3a8a;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+    /* Row that holds tasks and the session recorder side-by-side */
+    .tasks-row {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      align-items: flex-start;
+      width: 90%;
+      max-width: 980px; /* two cards of 480px fit with gap */
+      margin: 60px auto;
+    }
+
+    .session-log {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 24px;
+      width: 100%;
+      max-width: 480px;
+      min-height: 140px;
+    }
+
+    .session-list {
+      list-style-position: inside;
+      font-size: 0.95rem;
+      color: #0f172a;
+      margin-top: 8px;
+      padding-left: 0;
+    }
+
+    /* session items mirror task-item visuals */
+    .session-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f1f5f9;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+      cursor: grab;
+      border: 2px solid transparent;
+    }
+
+    .session-item .session-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    .session-item .session-name {
+      font-weight: 600;
+      color: #0b2447;
+    }
+
+    .session-item .session-date {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+    /* Goals section styles */
+    .goals-section {width:90%;max-width:980px;margin:12px auto 60px;}
+    .goals-card {background:#fff;border-radius:12px;padding:18px;box-shadow:0 4px 12px rgba(0,0,0,0.08);}
+    .goals-controls {display:flex;gap:10px;align-items:center;margin-bottom:12px;}
+    .goals-controls input[type="text"]{flex:1;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px}
+    .goals-controls select{padding:10px;border-radius:8px;border:1px solid #cbd5e1}
+    .goal-columns{display:flex;gap:16px;justify-content:space-between;align-items:flex-start}
+    .goal-column{flex:1;min-width:180px}
+    .goal-column h4{margin:0 0 8px 0;color:#0b2447}
+    .goal-list{list-style:none;padding:0;margin:0}
+    .goal-item{display:flex;justify-content:space-between;align-items:center;background:#f8fafc;padding:10px;border-radius:10px;margin-bottom:8px}
+    .goal-item .goal-title{font-weight:600;color:#0b2447}
+    .goal-actions button{border:none;border-radius:8px;padding:6px 10px;cursor:pointer}
+    /* Responsive: stack major sections vertically on small screens (mobile) */
+    @media (max-width: 768px) {
+      /* Stack timer cards vertically and center */
+      .timer-section {flex-direction: column;align-items: center;gap: 18px;margin: 30px auto;}
+      .timer-card {max-width: 100%;width: 100%;}
+
+      /* Stack tasks and session recorder vertically */
+      .tasks-row {flex-direction: column;align-items: stretch;gap: 16px;width: 94%;max-width: 520px;margin: 30px auto;}
+      .tasks-section, .session-log {max-width: 100%;width: 100%;}
+
+      /* Make hero buttons stack and stretch on mobile for easier tapping */
+      .hero-buttons {flex-direction: column;gap: 12px;}
+      .hero-buttons button {width: 100%;max-width: 360px;margin: 0 auto;padding: 12px 20px;border-radius: 12px;}
+
+      /* Goals: stack columns vertically */
+      .goal-columns {flex-direction: column;gap: 12px;}
+      .goal-column {min-width: 100%;}
+
+      /* Reports card full width */
+      .reports-wrap {width: 94%;}
+      .report-card {width: 100%;}
+
+      /* Reduce oversized time on mobile to fit comfortably */
+      .time {font-size: 40px;}
+
+      /* Navbar: tighten spacing and ensure readable on small screens */
+      .nav-container {max-width: 96%;padding: 10px 6px;}
+      nav ul {gap: 16px;}
+      nav ul li a {font-size: 0.95rem;}
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <img src="d61ef2ec-2a28-42e2-83a5-b3b667570c6a.png" alt="Focus Flow Logo">
+        <span>FOCUS FLOW</span>
+      </div>
+      <nav>
+        <ul id="nav-list">
+          <li><a href="#pomodoro" class="active">Pomodoro</a></li>
+          <li><a href="#tasks">Tasks</a></li>
+          <li><a href="#sessions">Sessions</a></li>
+          <li><a href="#reports">Reports</a></li>
+          <li><a href="#goals">Goals</a></li>
+          <div class="underline"></div>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>Stay Focused. Track Progress. Achieve Goals.</h1>
+    <div class="hero-buttons">
+      <button id="startFocus">Start Focusing</button>
+      <button class="secondary" id="heroAddTask">Add Task</button>
+    </div>
+  </section>
+
+  <section class="timer-section" id="pomodoro">
+    <div class="timer-card">
+      <h1>Pomodoro Timer</h1>
+      <div class="time" id="time">25:00 <span class="edit-icon" id="edit">✎</span></div>
+      <div class="edit-panel" id="editPanel">
+        <label for="minutes">Set Minutes:</label>
+        <input type="number" id="minutes" min="1" max="120" value="25" />
+        <button id="apply">Apply</button>
+      </div>
+      <div class="controls">
+        <button id="start">Start</button>
+        <button id="pause" class="secondary">Pause</button>
+        <button id="reset" class="secondary">Reset</button>
+      </div>
+      <div class="status" id="status">Focus session</div>
+    </div>
+
+    <div class="timer-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+        <h1 style="margin:0;">Question Timer</h1>
+        <button id="qResetSaved" class="secondary" title="Clear saved questions" style="padding:8px 14px;border-radius:20px;background:#ef4444;color:#fff;border:none;cursor:pointer;">Reset Saved</button>
+      </div>
+      <div class="time" id="qtime">00:00</div>
+      <div class="controls">
+        <button id="qstart">Start</button>
+        <button id="qpause" class="secondary">Pause</button>
+        <button id="qsave" class="secondary">Save</button>
+      </div>
+      <div class="status" id="qstatus">Ready</div>
+      <div class="question-log" id="questionLog"></div>
+    </div>
+  </section>
+
+  <!-- Tasks row: My Tasks + Session Recorder -->
+  <div class="tasks-row">
+    <div class="tasks-section" id="tasks">
+      <div class="tasks-header">
+        <h3>My Tasks</h3>
+        <button id="deleteAll">Delete All</button>
+      </div>
+
+      <div class="task-input">
+        <input type="text" id="taskInput" placeholder="Add a new task...">
+        <button id="addTask">Add</button>
+      </div>
+
+      <ul class="task-list" id="taskList"></ul>
+    </div>
+
+  <div class="session-log" id="sessions">
+      <div class="tasks-header">
+        <h3>Sessions</h3>
+        <div>
+          <button id="clearSessions">Clear</button>
+        </div>
+      </div>
+
+      <div class="task-input" style="margin-top:6px;">
+        <input type="text" id="sessionInput" placeholder="Session name (e.g. Deep Work)">
+        <button id="addSession">Add</button>
+      </div>
+
+      <!-- Record Now button removed per request -->
+
+      <ol class="session-list" id="sessionList" style="padding-left:0; margin-top:12px;"></ol>
+    </div>
+  </div>
+
+  <script>
+    // Navbar underline animation
+    const links = document.querySelectorAll('nav ul li a');
+    const underline = document.querySelector('.underline');
+    function moveUnderline(link) {
+      const { offsetLeft, offsetWidth } = link;
+      underline.style.left = `${offsetLeft}px`;
+      underline.style.width = `${offsetWidth}px`;
+    }
+    links.forEach(link => {
+      link.addEventListener('click', function() {
+        links.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+        moveUnderline(this);
+      });
+    });
+    window.addEventListener('load', () => {
+      const activeLink = document.querySelector('nav ul li a.active');
+      moveUnderline(activeLink);
+    });
+
+    // Pomodoro Timer Logic
+    let duration = 25 * 60;
+    let timeLeft = duration;
+    let timer = null;
+    let running = false;
+  let timerStart = null; // timestamp when pomodoro started (ms)
+  let totalPomodoroSeconds = 0; // accumulated focused seconds from pomodoro
+
+    const timeEl = document.getElementById('time');
+    const statusEl = document.getElementById('status');
+    const startBtn = document.getElementById('start');
+    const pauseBtn = document.getElementById('pause');
+    const resetBtn = document.getElementById('reset');
+    const applyBtn = document.getElementById('apply');
+    const editBtn = document.getElementById('edit');
+    const editPanel = document.getElementById('editPanel');
+    const minutesInput = document.getElementById('minutes');
+
+    function updateTime() {
+      const min = Math.floor(timeLeft / 60).toString().padStart(2,'0');
+      const sec = (timeLeft % 60).toString().padStart(2,'0');
+      timeEl.childNodes[0].textContent = `${min}:${sec} `;
+    }
+
+    function startTimer() {
+      if (running) return;
+      running = true;
+      if (!timerStart) timerStart = Date.now();
+      statusEl.textContent = 'Focusing...';
+      timer = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;
+          updateTime();
+          updateReports();
+        } else {
+          clearInterval(timer);
+          // pomodoro finished, accumulate elapsed
+          if (timerStart) {
+            const elapsed = Math.round((Date.now() - timerStart) / 1000);
+            totalPomodoroSeconds += elapsed;
+            timerStart = null;
+          }
+          statusEl.textContent = 'Break time!';
+          running = false;
+          updateReports();
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(timer);
+      running = false;
+      // accumulate elapsed time since last start
+      if (timerStart) {
+        const elapsed = Math.round((Date.now() - timerStart) / 1000);
+        totalPomodoroSeconds += elapsed;
+        timerStart = null;
+      }
+      statusEl.textContent = 'Paused';
+      updateReports();
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      running = false;
+      // accumulate elapsed if running
+      if (timerStart) {
+        const elapsed = Math.round((Date.now() - timerStart) / 1000);
+        totalPomodoroSeconds += elapsed;
+        timerStart = null;
+      }
+      timeLeft = duration;
+      updateTime();
+      statusEl.textContent = 'Focus session';
+      updateReports();
+    }
+
+    function applyMinutes() {
+      if (running) return;
+      let mins = parseInt(minutesInput.value);
+      if (isNaN(mins) || mins < 1) mins = 1;
+      if (mins > 120) mins = 120;
+      duration = mins * 60;
+      timeLeft = duration;
+      updateTime();
+      statusEl.textContent = `Set to ${mins} min`;
+      editPanel.style.display = 'none';
+    }
+
+    editBtn.addEventListener('click', () => {
+      editPanel.style.display = editPanel.style.display === 'none' ? 'block' : 'none';
+    });
+
+    startBtn.onclick = startTimer;
+    pauseBtn.onclick = pauseTimer;
+    resetBtn.onclick = resetTimer;
+    applyBtn.onclick = applyMinutes;
+    // Hero button starts the Pomodoro timer
+    const heroStartBtn = document.getElementById('startFocus');
+    heroStartBtn && heroStartBtn.addEventListener('click', () => {
+      // if timer not running, start; if already running, do nothing
+      startTimer();
+    });
+    // Hero Add Task button: focus task input and scroll to tasks
+    const heroAddBtn = document.getElementById('heroAddTask');
+    heroAddBtn && heroAddBtn.addEventListener('click', () => {
+      const taskInputEl = document.getElementById('taskInput');
+      if (taskInputEl) {
+        taskInputEl.focus();
+        // scroll the tasks area into view for the user
+        const tasksSection = document.getElementById('tasks') || document.querySelector('.tasks-section');
+        if (tasksSection) tasksSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+
+    updateTime();
+
+    // Question Timer Logic
+    let qTimer = null;
+    let qRunning = false;
+    let qSeconds = 0;
+    let questionCount = 0;
+
+    const qtimeEl = document.getElementById('qtime');
+    const qstatusEl = document.getElementById('qstatus');
+    const qstartBtn = document.getElementById('qstart');
+    const qpauseBtn = document.getElementById('qpause');
+    const qsaveBtn = document.getElementById('qsave');
+    const questionLog = document.getElementById('questionLog');
+
+    function updateQTime() {
+      const min = Math.floor(qSeconds / 60).toString().padStart(2, '0');
+      const sec = (qSeconds % 60).toString().padStart(2, '0');
+      qtimeEl.textContent = `${min}:${sec}`;
+    }
+
+    function startQTimer() {
+      if (qRunning) return;
+      qRunning = true;
+      qstatusEl.textContent = 'Timing...';
+      qTimer = setInterval(() => {
+        qSeconds++;
+        updateQTime();
+        updateReports();
+      }, 1000);
+    }
+
+    function pauseQTimer() {
+      clearInterval(qTimer);
+      qRunning = false;
+      qstatusEl.textContent = 'Paused';
+    }
+
+    function saveQTimer() {
+      clearInterval(qTimer);
+      qRunning = false;
+      questionCount++;
+      const min = Math.floor(qSeconds / 60).toString().padStart(2, '0');
+      const sec = (qSeconds % 60).toString().padStart(2, '0');
+      const entry = document.createElement('div');
+      entry.textContent = `Question ${questionCount}: ${min}:${sec}`;
+      questionLog.appendChild(entry);
+      // add question time to totals
+      totalQuestionSeconds = (typeof totalQuestionSeconds !== 'undefined') ? totalQuestionSeconds + qSeconds : qSeconds;
+      qSeconds = 0;
+      updateQTime();
+      qstatusEl.textContent = 'Ready for next question';
+      updateReports();
+    }
+
+    qstartBtn.onclick = startQTimer;
+    qpauseBtn.onclick = pauseQTimer;
+    qsaveBtn.onclick = saveQTimer;
+
+    // Reset saved question log and totals
+    const qResetSavedBtn = document.getElementById('qResetSaved');
+    qResetSavedBtn && qResetSavedBtn.addEventListener('click', () => {
+      // clear visual log
+      if (questionLog) questionLog.innerHTML = '';
+      // reset counters
+      totalQuestionSeconds = 0;
+      questionCount = 0;
+      qSeconds = 0;
+      updateQTime();
+      updateReports();
+    });
+
+    updateQTime();
+
+    // Reports: completed tasks and total timer
+    let totalQuestionSeconds = 0;
+    function formatTimeHMS(totalSeconds) {
+      const hrs = Math.floor(totalSeconds / 3600);
+      const mins = Math.floor((totalSeconds % 3600) / 60);
+      const secs = totalSeconds % 60;
+      return `${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    }
+
+    function updateReports() {
+      // tasks completed
+      const completed = document.querySelectorAll('.task-item.completed').length;
+      const tasksEl = document.getElementById('reportTasksCompleted');
+      if (tasksEl) tasksEl.textContent = String(completed);
+
+      // total timer = pomodoro + question
+      // include currently-running time: for pomodoro use elapsed since timerStart, for question include qSeconds when running
+      const runningPomodoro = (running && timerStart) ? Math.round((Date.now() - timerStart) / 1000) : 0;
+      const runningQuestion = qRunning ? qSeconds : 0;
+      const totalSeconds = (totalPomodoroSeconds || 0) + runningPomodoro + (totalQuestionSeconds || 0) + runningQuestion;
+      const totalEl = document.getElementById('reportTotalTime');
+      if (totalEl) totalEl.textContent = formatTimeHMS(totalSeconds);
+    }
+
+    // -- Task Manager Logic (appended from Task manager.txt)
+    const taskInput = document.getElementById('taskInput');
+    const addTaskBtn = document.getElementById('addTask');
+    const taskList = document.getElementById('taskList');
+    const deleteAllBtn = document.getElementById('deleteAll');
+    let selectedTask = null;
+
+    addTaskBtn.addEventListener('click', addTask);
+    taskInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') addTask();
+    });
+
+    function addTask() {
+      const text = taskInput.value.trim();
+      if (!text) return;
+
+      const li = document.createElement('li');
+      li.className = 'task-item';
+      li.draggable = true;
+      li.innerHTML = `
+        <div class="task-info">
+          <input type="checkbox" class="done-checkbox">
+          <span>${text}</span>
+        </div>
+        <div class="task-actions">
+          <button class="edit-btn">✎</button>
+          <button class="delete-btn">Delete</button>
+        </div>`;
+
+      const checkbox = li.querySelector('.done-checkbox');
+      const span = li.querySelector('span');
+      const editBtn = li.querySelector('.edit-btn');
+
+      checkbox.addEventListener('change', () => {
+        li.classList.toggle('completed', checkbox.checked);
+        updateReports();
+      });
+
+      editBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        renameTask(span);
+      });
+
+      li.querySelector('.delete-btn').addEventListener('click', e => {
+        e.stopPropagation();
+        li.remove();
+        updateReports();
+      });
+
+      li.addEventListener('click', () => selectTask(li));
+
+      addDragAndDrop(li);
+      taskList.appendChild(li);
+      taskInput.value = '';
+    }
+
+    function selectTask(task) {
+      if (selectedTask && selectedTask !== task) {
+        selectedTask.classList.remove('selected');
+      }
+      if (task.classList.contains('selected')) {
+        task.classList.remove('selected');
+        selectedTask = null;
+      } else {
+        task.classList.add('selected');
+        selectedTask = task;
+      }
+    }
+
+    function renameTask(span) {
+      const currentText = span.textContent;
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = currentText;
+      input.className = 'edit-input';
+      span.replaceWith(input);
+      input.focus();
+
+      input.addEventListener('blur', () => {
+        const newSpan = document.createElement('span');
+        newSpan.textContent = input.value.trim() || currentText;
+        input.replaceWith(newSpan);
+      });
+
+      input.addEventListener('keypress', e => {
+        if (e.key === 'Enter') input.blur();
+      });
+    }
+
+    deleteAllBtn.addEventListener('click', () => {
+      taskList.innerHTML = '';
+      updateReports();
+    });
+
+    function addDragAndDrop(li) {
+      li.addEventListener('dragstart', () => {
+        li.classList.add('dragging');
+      });
+
+      li.addEventListener('dragend', () => {
+        li.classList.remove('dragging');
+      });
+    }
+
+    taskList.addEventListener('dragover', e => {
+      e.preventDefault();
+      const dragging = document.querySelector('.dragging');
+      const afterElement = getDragAfterElement(taskList, e.clientY);
+      if (afterElement == null) {
+        taskList.appendChild(dragging);
+      } else {
+        taskList.insertBefore(dragging, afterElement);
+      }
+    });
+
+    function getDragAfterElement(container, y) {
+      const draggableElements = [...container.querySelectorAll('.task-item:not(.dragging)')];
+
+      return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    // Session recorder logic (named sessions like tasks)
+  let sessionCount = 0;
+  const clearSessionsBtn = document.getElementById('clearSessions');
+    const sessionList = document.getElementById('sessionList');
+    const sessionInput = document.getElementById('sessionInput');
+    const addSessionBtn = document.getElementById('addSession');
+
+    function formatDate(d) {
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const hh = String(d.getHours()).padStart(2, '0');
+      const min = String(d.getMinutes()).padStart(2, '0');
+      const ss = String(d.getSeconds()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+    }
+
+    function createSessionEntry(name) {
+      sessionCount++;
+      const now = new Date();
+      const li = document.createElement('li');
+      li.className = 'session-item';
+      li.draggable = true;
+      li.innerHTML = `
+        <div class="session-info">
+          <div class="session-name">${sessionCount}. ${escapeHtml(name)}</div>
+          <div class="session-date">${formatDate(now)}</div>
+        </div>
+        <div class="task-actions">
+          <button class="edit-btn">✎</button>
+          <button class="delete-btn">Delete</button>
+        </div>`;
+
+      const editBtn = li.querySelector('.edit-btn');
+      const deleteBtn = li.querySelector('.delete-btn');
+
+      editBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        renameSession(li);
+      });
+
+      deleteBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        li.remove();
+        updateReports();
+      });
+
+      addDragAndDrop(li);
+      sessionList.appendChild(li);
+        updateReports();
+    }
+
+    function addSession() {
+      const name = (sessionInput.value || '').trim() || 'Unnamed Session';
+      createSessionEntry(name);
+      sessionInput.value = '';
+      updateReports();
+    }
+
+    function renameSession(li) {
+      const nameDiv = li.querySelector('.session-name');
+      const currentText = nameDiv.textContent.replace(/^\d+\.\s*/, '');
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = currentText;
+      input.className = 'edit-input';
+      nameDiv.replaceWith(input);
+      input.focus();
+
+      input.addEventListener('blur', () => {
+        const newName = input.value.trim() || currentText;
+        const newDiv = document.createElement('div');
+        newDiv.className = 'session-name';
+        // Keep existing serial number prefix
+        const serial = li.querySelector('.session-name') ? li.querySelector('.session-name').textContent.split('.')[0] : sessionCount;
+        newDiv.textContent = `${serial}. ${newName}`;
+        input.replaceWith(newDiv);
+        updateReports();
+      });
+
+      input.addEventListener('keypress', e => {
+        if (e.key === 'Enter') input.blur();
+      });
+    }
+
+    // Escape HTML for inserted names
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, function (s) {
+        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[s];
+      });
+    }
+
+    addSessionBtn && addSessionBtn.addEventListener('click', addSession);
+    sessionInput && sessionInput.addEventListener('keypress', e => { if (e.key === 'Enter') addSession(); });
+
+    // recordBtn removed; use Add button to create named sessions instead
+
+    clearSessionsBtn && clearSessionsBtn.addEventListener('click', () => {
+      sessionList.innerHTML = '';
+      sessionCount = 0;
+    });
+
+    // allow dragging within session list (similar to tasks)
+    sessionList && sessionList.addEventListener('dragover', e => {
+      e.preventDefault();
+      const dragging = document.querySelector('.dragging');
+      const afterElement = getDragAfterElement(sessionList, e.clientY);
+      if (afterElement == null) {
+        sessionList.appendChild(dragging);
+      } else {
+        sessionList.insertBefore(dragging, afterElement);
+      }
+    });
+
+    // Goals logic - initialize after DOM ready so goal inputs exist when we wire handlers
+    document.addEventListener('DOMContentLoaded', () => {
+      const goalInput = document.getElementById('goalInput');
+      const goalPriority = document.getElementById('goalPriority');
+      const addGoalBtn = document.getElementById('addGoal');
+      const goalsHigh = document.getElementById('goalsHigh');
+      const goalsMedium = document.getElementById('goalsMedium');
+      const goalsLow = document.getElementById('goalsLow');
+
+      function createGoalItem(text, priority) {
+        const li = document.createElement('li');
+        li.className = 'goal-item';
+        li.draggable = true;
+        li.innerHTML = `
+          <div style="display:flex;gap:8px;align-items:center">
+            <div class="goal-title">${escapeHtml(text)}</div>
+            <span class="goal-priority" style="background:#e6fffa;color:#006b5a;padding:4px 8px;border-radius:999px;font-size:0.8rem">${capitalize(priority)}</span>
+          </div>
+          <div class="goal-actions"><button class="edit-btn">✎</button><button class="delete-btn">Delete</button></div>`;
+        const editBtn = li.querySelector('.edit-btn');
+        const deleteBtn = li.querySelector('.delete-btn');
+        editBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          const titleDiv = li.querySelector('.goal-title');
+          const current = titleDiv.textContent;
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.value = current;
+          input.className = 'edit-input';
+          titleDiv.replaceWith(input);
+          input.focus();
+          input.addEventListener('blur', () => {
+            const newDiv = document.createElement('div');
+            newDiv.className = 'goal-title';
+            newDiv.textContent = input.value.trim() || current;
+            input.replaceWith(newDiv);
+          });
+          input.addEventListener('keypress', ev => { if (ev.key === 'Enter') input.blur(); });
+        });
+        deleteBtn.addEventListener('click', e => { e.stopPropagation(); li.remove(); });
+        addDragAndDrop(li);
+        // when drag ends, ensure priority badge reflects the column it's dropped into
+        li.addEventListener('dragend', () => updateGoalPriority(li));
+        return li;
+      }
+
+      function addGoal() {
+        const text = (goalInput.value || '').trim();
+        if (!text) return;
+        const priority = (goalPriority && goalPriority.value) ? goalPriority.value : 'medium';
+        const li = createGoalItem(text, priority);
+        if (priority === 'high') goalsHigh.appendChild(li);
+        else if (priority === 'medium') goalsMedium.appendChild(li);
+        else goalsLow.appendChild(li);
+        // ensure badge matches actual column
+        updateGoalPriority(li);
+        goalInput.value = '';
+      }
+
+      function capitalize(s){ return String(s||'').charAt(0).toUpperCase() + String(s||'').slice(1); }
+
+      function updateGoalPriority(li){
+        if (!li) return;
+        const badge = li.querySelector('.goal-priority');
+        if (!badge) return;
+        const parentId = li.parentElement && li.parentElement.id;
+        if (parentId === 'goalsHigh') { badge.textContent = 'High'; badge.style.background = '#ffe4e6'; badge.style.color = '#9b1232'; }
+        else if (parentId === 'goalsMedium') { badge.textContent = 'Medium'; badge.style.background = '#fffbeb'; badge.style.color = '#92400e'; }
+        else if (parentId === 'goalsLow') { badge.textContent = 'Low'; badge.style.background = '#ecfeff'; badge.style.color = '#065f46'; }
+        else { badge.textContent = capitalize((goalPriority && goalPriority.value) || 'medium'); badge.style.background = '#e6fffa'; badge.style.color = '#006b5a'; }
+      }
+
+      addGoalBtn && addGoalBtn.addEventListener('click', addGoal);
+      goalInput && goalInput.addEventListener('keypress', e => { if (e.key === 'Enter') addGoal(); });
+
+      // enable dragover for goal lists
+      [goalsHigh, goalsMedium, goalsLow].forEach(list => {
+        list && list.addEventListener('dragover', e => {
+          e.preventDefault();
+          const dragging = document.querySelector('.dragging');
+          const afterElement = getDragAfterElement(list, e.clientY);
+          if (afterElement == null) list.appendChild(dragging); else list.insertBefore(dragging, afterElement);
+        });
+      });
+    });
+  </script>
+  <!-- Goals section -->
+  <div class="goals-section" id="goals">
+    <div class="goals-card">
+      <h3 style="margin:0 0 12px 0;color:#0b2447;text-align:left;">Goals</h3>
+      <div class="goals-controls">
+        <input type="text" id="goalInput" placeholder="Add a goal (e.g. Finish report)" />
+        <select id="goalPriority">
+          <option value="high">High</option>
+          <option value="medium" selected>Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <button id="addGoal" style="background:#00bfa6;color:#fff;border:none;padding:10px 18px;border-radius:30px;box-shadow:0 4px 10px rgba(0,0,0,0.08);">Add Goal</button>
+      </div>
+
+      <div class="goal-columns">
+        <div class="goal-column">
+          <h4>High Priority</h4>
+          <ul class="goal-list" id="goalsHigh"></ul>
+        </div>
+        <div class="goal-column">
+          <h4>Medium Priority</h4>
+          <ul class="goal-list" id="goalsMedium"></ul>
+        </div>
+        <div class="goal-column">
+          <h4>Low Priority</h4>
+          <ul class="goal-list" id="goalsLow"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Reports section: single Reports card containing both metrics -->
+  <div class="reports-wrap" id="reports" style="width:90%;max-width:980px;margin:20px auto 60px;display:flex;justify-content:center;">
+    <div class="report-card" style="width:100%;background:#fff;border-radius:12px;padding:18px;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+      <h3 style="margin:0 0 12px 0;color:#0b2447;text-align:left;">Reports</h3>
+      <div style="display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
+        <div style="flex:1;min-width:180px;">
+          <div style="color:#64748b;font-size:0.9rem;margin-bottom:6px;">Tasks completed</div>
+          <div id="reportTasksCompleted" style="font-size:1.4rem;font-weight:700;color:#00bfa6;">0</div>
+        </div>
+        <div style="flex:1;min-width:220px;text-align:right;">
+          <div style="color:#64748b;font-size:0.9rem;margin-bottom:6px;">Total tracked time (HH:MM:SS)</div>
+          <div id="reportTotalTime" style="font-size:1.2rem;font-weight:700;color:#0b2447;">00:00:00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // initialize reports after DOM elements exist
+    if (typeof updateReports === 'function') updateReports();
+  </script>
+</body>
+</html>
