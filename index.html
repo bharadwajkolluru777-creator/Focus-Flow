@@ -36,6 +36,10 @@
     .controls button:hover {transform: translateY(-3px);box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);}
     .controls .secondary {background-color: #ffffff;color: #0b2447;border: 2px solid #0b2447;}
     .controls .secondary:hover {background-color: #e0e0e0;transform: translateY(-3px);}
+
+  /* Auto Start toggle placed next to question Save button */
+  .controls .auto-start {display:flex;align-items:center;gap:8px;margin-left:6px;color:#64748b;font-size:0.95rem}
+  .controls .auto-start input[type="checkbox"] {width:16px;height:16px;cursor:pointer}
     .status {color: #64748b;font-size: 14px;margin-top: 10px;}
     input[type=number] {width: 60px;padding: 6px;border: 1px solid #cbd5e1;border-radius: 6px;text-align: center;font-size: 16px;}
     #apply {background: #0f172a;color: #fff;border: none;border-radius: 6px;padding: 6px 10px;margin-left: 8px;cursor: pointer;}
@@ -287,24 +291,26 @@
     .goal-actions button{border:none;border-radius:8px;padding:6px 10px;cursor:pointer}
     /* Responsive: stack major sections vertically on small screens (mobile) */
     @media (max-width: 768px) {
-      /* Stack timer cards vertically and center */
-      .timer-section {flex-direction: column;align-items: center;gap: 18px;margin: 30px auto;}
-      .timer-card {max-width: 100%;width: 100%;}
+      /* Ensure wrapper rows become vertical stacks so every card is top-to-bottom */
+      .timer-section, .tasks-row, .goal-columns, .reports-wrap {flex-direction: column;align-items: stretch;gap: 18px;margin: 24px auto;width: 94%;max-width: 980px;}
 
-      /* Stack tasks and session recorder vertically */
-      .tasks-row {flex-direction: column;align-items: stretch;gap: 16px;width: 94%;max-width: 520px;margin: 30px auto;}
-      .tasks-section, .session-log {max-width: 100%;width: 100%;}
+      /* Make each card full width and flow vertically */
+      .timer-card, .tasks-section, .session-log, .goals-card, .report-card {max-width: 100%;width: 100%;margin: 0;}
+
+      /* Specific tweaks for timer area */
+      .timer-section {align-items: center;padding: 0;}
+      .timer-card {text-align: left;}
 
       /* Make hero buttons stack and stretch on mobile for easier tapping */
       .hero-buttons {flex-direction: column;gap: 12px;}
-      .hero-buttons button {width: 100%;max-width: 360px;margin: 0 auto;padding: 12px 20px;border-radius: 12px;}
+      .hero-buttons button {width: 100%;max-width: 420px;margin: 0 auto;padding: 12px 20px;border-radius: 12px;}
 
       /* Goals: stack columns vertically */
       .goal-columns {flex-direction: column;gap: 12px;}
       .goal-column {min-width: 100%;}
 
       /* Reports card full width */
-      .reports-wrap {width: 94%;}
+      .reports-wrap {width: 94%;padding: 0;}
       .report-card {width: 100%;}
 
       /* Reduce oversized time on mobile to fit comfortably */
@@ -312,16 +318,20 @@
 
       /* Navbar: tighten spacing and ensure readable on small screens */
       .nav-container {max-width: 96%;padding: 10px 6px;}
-      nav ul {gap: 16px;}
-      nav ul li a {font-size: 0.95rem;}
+      nav ul {gap: 12px;flex-wrap: wrap;}
+      nav ul li a {font-size: 0.95rem;padding:6px 4px;}
     }
+    /* Footer styling */
+    .site-footer {background: #000; color: #e6e6e6; padding: 18px 0; text-align: center; margin-top: 30px;}
+    .site-footer .footer-container {max-width: 1100px; margin: 0 auto; padding: 0 20px; font-size: 0.95rem; opacity: 0.95}
+    .site-footer a {color: #9ee7d8; text-decoration: none;}
   </style>
 </head>
 <body>
   <header class="navbar">
     <div class="nav-container">
       <div class="logo">
-        <img src="d61ef2ec-2a28-42e2-83a5-b3b667570c6a.png" alt="Focus Flow Logo">
+  <img src="Focus Flow logo.png" alt="Focus Flow Logo">
         <span>FOCUS FLOW</span>
       </div>
       <nav>
@@ -368,10 +378,14 @@
         <button id="qResetSaved" class="secondary" title="Clear saved questions" style="padding:8px 14px;border-radius:20px;background:#ef4444;color:#fff;border:none;cursor:pointer;">Reset Saved</button>
       </div>
       <div class="time" id="qtime">00:00</div>
-      <div class="controls">
+      <div class="controls" style="align-items:center;">
         <button id="qstart">Start</button>
         <button id="qpause" class="secondary">Pause</button>
         <button id="qsave" class="secondary">Save</button>
+        <label class="auto-start" title="Auto start next question">
+          <input type="checkbox" id="autoStart" />
+          <span>Auto Start</span>
+        </label>
       </div>
       <div class="status" id="qstatus">Ready</div>
       <div class="question-log" id="questionLog"></div>
@@ -423,10 +437,27 @@
       underline.style.width = `${offsetWidth}px`;
     }
     links.forEach(link => {
-      link.addEventListener('click', function() {
+      link.addEventListener('click', function(e) {
+        // prevent default anchor jump so we can smooth-scroll and keep underline placement
+        e.preventDefault();
         links.forEach(l => l.classList.remove('active'));
         this.classList.add('active');
         moveUnderline(this);
+
+        // Smooth scroll the target section into view; center vertically for better UX (esp. Tasks)
+        const href = this.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          const target = document.querySelector(href);
+          if (target) {
+            try {
+              target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } catch (err) {
+              // fallback for older browsers
+              const top = target.getBoundingClientRect().top + window.pageYOffset - (window.innerHeight / 2) + (target.offsetHeight / 2);
+              window.scrollTo({ top, behavior: 'smooth' });
+            }
+          }
+        }
       });
     });
     window.addEventListener('load', () => {
@@ -600,8 +631,19 @@
       totalQuestionSeconds = (typeof totalQuestionSeconds !== 'undefined') ? totalQuestionSeconds + qSeconds : qSeconds;
       qSeconds = 0;
       updateQTime();
-      qstatusEl.textContent = 'Ready for next question';
+      // update reports immediately
       updateReports();
+
+      // If Auto Start is enabled, start the next question timer immediately
+      const autoStartEl = document.getElementById('autoStart');
+      if (autoStartEl && autoStartEl.checked) {
+        // small timeout to ensure UI updates before starting
+        setTimeout(() => {
+          startQTimer();
+        }, 120);
+      } else {
+        qstatusEl.textContent = 'Ready for next question';
+      }
     }
 
     qstartBtn.onclick = startQTimer;
@@ -638,13 +680,25 @@
       const tasksEl = document.getElementById('reportTasksCompleted');
       if (tasksEl) tasksEl.textContent = String(completed);
 
-      // total timer = pomodoro + question
-      // include currently-running time: for pomodoro use elapsed since timerStart, for question include qSeconds when running
-      const runningPomodoro = (running && timerStart) ? Math.round((Date.now() - timerStart) / 1000) : 0;
-      const runningQuestion = qRunning ? qSeconds : 0;
-      const totalSeconds = (totalPomodoroSeconds || 0) + runningPomodoro + (totalQuestionSeconds || 0) + runningQuestion;
-      const totalEl = document.getElementById('reportTotalTime');
-      if (totalEl) totalEl.textContent = formatTimeHMS(totalSeconds);
+  // total timer = pomodoro only (exclude question timer)
+  // include currently-running pomodoro time using elapsed since timerStart
+  const runningPomodoro = (running && timerStart) ? Math.round((Date.now() - timerStart) / 1000) : 0;
+  const totalSeconds = (totalPomodoroSeconds || 0) + runningPomodoro;
+  const totalEl = document.getElementById('reportTotalTime');
+  if (totalEl) totalEl.textContent = formatTimeHMS(totalSeconds);
+
+  // Question stats: include saved totalQuestionSeconds plus currently-running question seconds
+  const qRunningSeconds = (typeof qRunning !== 'undefined' && qRunning) ? qSeconds : 0;
+  const questionsTotalSeconds = (typeof totalQuestionSeconds !== 'undefined' ? totalQuestionSeconds : 0) + qRunningSeconds;
+  const qCount = (typeof questionCount !== 'undefined' ? questionCount : 0);
+  const qAvg = qCount > 0 ? Math.round(questionsTotalSeconds / qCount) : 0;
+
+  const qTotalEl = document.getElementById('reportQuestionTotal');
+  const qAvgEl = document.getElementById('reportQuestionAvg');
+  const qCountEl = document.getElementById('reportQuestionCount');
+  if (qTotalEl) qTotalEl.textContent = formatTimeHMS(questionsTotalSeconds);
+  if (qAvgEl) qAvgEl.textContent = formatTimeHMS(qAvg);
+  if (qCountEl) qCountEl.textContent = String(qCount);
     }
 
     // -- Task Manager Logic (appended from Task manager.txt)
@@ -1006,7 +1060,6 @@
       </div>
     </div>
   </div>
-  <!-- Reports section: single Reports card containing both metrics -->
   <div class="reports-wrap" id="reports" style="width:90%;max-width:980px;margin:20px auto 60px;display:flex;justify-content:center;">
     <div class="report-card" style="width:100%;background:#fff;border-radius:12px;padding:18px;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
       <h3 style="margin:0 0 12px 0;color:#0b2447;text-align:left;">Reports</h3>
@@ -1020,11 +1073,28 @@
           <div id="reportTotalTime" style="font-size:1.2rem;font-weight:700;color:#0b2447;">00:00:00</div>
         </div>
       </div>
+      <!-- Question statistics: total time, average per question, number of questions -->
+      <div style="margin-top:12px;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
+        <div style="flex:1;min-width:160px;">
+          <div style="color:#64748b;font-size:0.9rem;margin-bottom:6px;">Questions total time</div>
+          <div id="reportQuestionTotal" style="font-size:1.1rem;font-weight:700;color:#0b2447;">00:00:00</div>
+        </div>
+        <div style="flex:1;min-width:160px;text-align:center;">
+          <div style="color:#64748b;font-size:0.9rem;margin-bottom:6px;">Average per question</div>
+          <div id="reportQuestionAvg" style="font-size:1.1rem;font-weight:700;color:#00bfa6;">00:00</div>
+        </div>
+        <div style="flex:1;min-width:120px;text-align:right;">
+          <div style="color:#64748b;font-size:0.9rem;margin-bottom:6px;">Number of questions</div>
+          <div id="reportQuestionCount" style="font-size:1.1rem;font-weight:700;color:#0b2447;">0</div>
+        </div>
+      </div>
     </div>
   </div>
   <script>
-    // initialize reports after DOM elements exist
     if (typeof updateReports === 'function') updateReports();
   </script>
+  <footer class="site-footer">
+    <div class="footer-container">© 2025 Focus Flow — This website is made by <strong>Innovative Web Design </strong> — <a href="https://innovativewebdesign.netlify.app" target="_blank" rel="noopener noreferrer">innovativewebdesign.netlify.app</a></div>
+  </footer>
 </body>
 </html>
