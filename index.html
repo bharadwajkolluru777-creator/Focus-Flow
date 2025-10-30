@@ -322,6 +322,62 @@
       nav ul {gap: 12px;flex-wrap: wrap;}
       nav ul li a {font-size: 0.95rem;padding:6px 4px;}
     }
+    @media (max-width: 768px) {
+  /* Make timer and input buttons fit smaller screens */
+  .controls {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .controls button {
+    flex: 1 1 45%;
+    padding: 10px 0;
+    font-size: 0.95rem;
+  }
+
+  /* Auto Start toggle below buttons for clean layout */
+  .controls .auto-start {
+    width: 100%;
+    justify-content: center;
+    margin-top: 6px;
+  }
+
+  .task-input {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .task-input input,
+  .task-input button {
+    width: 100%;
+  }
+
+  .task-input button {
+    padding: 10px 0;
+  }
+
+  /* Goal and session buttons */
+  .goals-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .goals-controls input,
+  .goals-controls select,
+  .goals-controls button {
+    width: 100%;
+  }
+
+  /* Make timer text smaller to fit */
+  .time {
+    font-size: 40px;
+  }
+
+  /* Prevent horizontal scroll on mobile */
+  body {
+    overflow-x: hidden;
+  }
+}
     /* Footer styling */
     .site-footer {background: #000; color: #e6e6e6; padding: 18px 0; text-align: center; margin-top: 30px;}
     .site-footer .footer-container {max-width: 1100px; margin: 0 auto; padding: 0 20px; font-size: 0.95rem; opacity: 0.95}
@@ -1099,4 +1155,5 @@
   </footer>
 </body>
 </html>
+
 
