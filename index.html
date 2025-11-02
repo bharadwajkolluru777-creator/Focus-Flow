@@ -22,8 +22,6 @@
     .hero-buttons {display: flex;justify-content: center;gap: 20px;margin-top: 20px;}
     .hero-buttons button {background-color: #00bfa6;color: white;border: none;padding: 12px 32px;border-radius: 30px;font-size: 1rem;cursor: pointer;font-weight: 600;transition: all 0.3s ease;box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);}
     .hero-buttons button:hover {transform: translateY(-3px);box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);}
-    .hero-buttons .secondary {background-color: #ffffff;color: #0b2447;border: 2px solid #0b2447;}
-    .hero-buttons .secondary:hover {background-color: #e0e0e0;transform: translateY(-3px);}
     .timer-section {display: flex;justify-content: center;align-items: flex-start;gap: 40px;margin: 60px auto;width: 90%;max-width: 1440px;}
     .timer-card {background: #fff;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);border-radius: 12px;padding: 30px;flex: 1;max-width: 480px;text-align: center;position: relative;}
     .timer-card h1 {font-size: 20px;margin-bottom: 10px;color: #1e293b;}
@@ -36,66 +34,123 @@
     .controls button:hover {transform: translateY(-3px);box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);}
     .controls .secondary {background-color: #ffffff;color: #0b2447;border: 2px solid #0b2447;}
     .controls .secondary:hover {background-color: #e0e0e0;transform: translateY(-3px);}
-
-  /* Auto Start toggle placed next to question Save button */
-  .controls .auto-start {display:flex;align-items:center;gap:8px;margin-left:6px;color:#64748b;font-size:0.95rem}
-  .controls .auto-start input[type="checkbox"] {width:16px;height:16px;cursor:pointer}
+    .controls .auto-start {display:flex;align-items:center;gap:8px;margin-left:6px;color:#64748b;font-size:0.95rem}
+    .controls .auto-start input[type="checkbox"] {width:16px;height:16px;cursor:pointer}
     .status {color: #64748b;font-size: 14px;margin-top: 10px;}
     input[type=number] {width: 60px;padding: 6px;border: 1px solid #cbd5e1;border-radius: 6px;text-align: center;font-size: 16px;}
     #apply {background: #0f172a;color: #fff;border: none;border-radius: 6px;padding: 6px 10px;margin-left: 8px;cursor: pointer;}
     #apply:hover {background: #1e293b;}
     .question-log {margin-top: 15px;text-align: left;font-size: 14px;color: #0b2447;}
-    /* Task manager styles (scoped) - taken from Task manager.txt */
-    .tasks-section {
+    
+    /* Sessions styles */
+    .sessions-section {
+      width: 90%;
+      max-width: 980px;
+      margin: 24px auto 60px;
+    }
+    .session-log {
       background: #ffffff;
-      /* match timer-card visuals */
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 30px;
-      width: 90%;
-      max-width: 480px; /* match timer-card max width */
-      margin: 0; /* no extra top margin when inside .tasks-row; row controls spacing */
-      align-self: flex-start; /* ensure top alignment within the row */
+      padding: 24px;
+      width: 100%;
     }
-
+    .session-list {
+      list-style-position: inside;
+      font-size: 0.95rem;
+      color: #0f172a;
+      margin-top: 8px;
+      padding-left: 0;
+    }
+    .session-item {
+      display: block;
+      background: #f1f5f9;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+      cursor: grab;
+      border: 2px solid transparent;
+    }
+    .session-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .session-item.dragging, .task-item.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+    .session-item .session-info {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .toggle-tasks-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-right: 10px;
+      color: #0b2447;
+      padding: 0 5px;
+    }
+    .session-item .session-name {
+      font-weight: 600;
+      color: #0b2447;
+    }
+    .session-tasks-container {
+      display: none;
+      margin-top: 12px;
+      padding-left: 28px;
+    }
+    .session-tasks-container.visible {
+      display: block;
+    }
+    .task-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      border: 1px solid #e2e8f0;
+    }
+    .task-item.completed {
+      text-decoration: line-through;
+      color: #94a3b8;
+      background-color: #f1f5f9;
+    }
+    .task-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+    .task-info .done-checkbox {
+      width: 16px;
+      height: 16px;
+      accent-color: #00bfa6;
+      cursor: pointer;
+    }
     .tasks-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
     }
-
     .tasks-header h3 {
       font-size: 1.4rem;
       font-weight: 600;
       color: #0b2447;
     }
-
-    .tasks-header button {
-      background-color: #ef4444;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 30px; /* pill-shaped like timer buttons */
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    .tasks-header button:hover {
-      background-color: #dc2626;
-      transform: translateY(-3px);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-    }
-
-    .task-input {
+    .task-input, .task-input-inline {
       display: flex;
       gap: 10px;
       margin-bottom: 20px;
     }
-
-    .task-input input {
+    .task-input input, .task-input-inline input {
       flex: 1;
       padding: 10px 14px;
       font-size: 1rem;
@@ -104,303 +159,139 @@
       outline: none;
       transition: border 0.3s ease;
     }
-
-    .task-input input:focus {
+    .task-input input:focus, .task-input-inline input:focus {
       border-color: #00bfa6;
     }
-
-    .task-input button {
+    .task-input button, .task-input-inline button {
       background-color: #00bfa6;
       color: white;
       border: none;
-      padding: 12px 32px; /* match timer control sizing */
-      border-radius: 30px; /* pill-shaped */
+      padding: 12px 32px;
+      border-radius: 30px;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.3s ease;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-
-    .task-input button:hover {
-      background-color: #00a892;
-      transform: translateY(-3px);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    .task-input button:hover, .task-input-inline button:hover {
+      background-color: #00a690;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
     }
-
-    .task-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .task-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #f1f5f9;
-      padding: 12px 16px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      transition: all 0.3s ease;
-      cursor: grab;
-      border: 2px solid transparent;
-    }
-
-    .task-item.completed {
-      text-decoration: line-through;
-      color: #6b7280;
-      background-color: #e0f2f1;
-    }
-
-    .task-item.selected {
-      border: 2px solid #00bfa6;
-      background-color: #ecfdf5;
-    }
-
-    .task-item:hover {
-      background: #e2e8f0;
-    }
-
-    .task-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 1;
-    }
-
-    /* Larger, clearer checkbox for tasks */
-    .task-info .done-checkbox {
-      width: 20px;
-      height: 20px;
-      transform: scale(1.3);
-      -webkit-transform: scale(1.3);
-      margin-right: 8px;
-      vertical-align: middle;
-      accent-color: #00bfa6; /* modern browsers: match Add button color */
+    .tasks-header button {
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px;
       cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-
+    .tasks-header button:hover {
+      background-color: #dc2626;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    }
     .task-actions {
       display: flex;
       gap: 8px;
       align-items: center;
     }
-
     .task-actions button, .edit-btn {
       border: none;
-      border-radius: 30px; /* pill-shaped */
+      border-radius: 30px;
       padding: 8px 14px;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.2s ease;
       box-shadow: 0 3px 8px rgba(0,0,0,0.08);
     }
-
     .delete-btn {
       background-color: #ef4444;
       color: white;
     }
-
     .delete-btn:hover {
       background-color: #dc2626;
-      transform: translateY(-3px);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 12px rgba(0,0,0,0.12);
     }
-
     .edit-btn {
       background-color: #0b2447;
       color: white;
     }
-
     .edit-btn:hover {
-      background-color: #1e3a8a;
-      transform: translateY(-3px);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+      background-color: #0a1f3a;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 12px rgba(0,0,0,0.12);
     }
-    /* Row that holds tasks and the session recorder side-by-side */
-    .tasks-row {
-      display: flex;
-      gap: 24px;
-      justify-content: center;
-      align-items: flex-start;
-      width: 90%;
-      max-width: 980px; /* two cards of 480px fit with gap */
-      margin: 60px auto;
-    }
-
-    .session-log {
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 24px;
-      width: 100%;
-      max-width: 480px;
-      min-height: 140px;
-    }
-
-    .session-list {
-      list-style-position: inside;
-      font-size: 0.95rem;
-      color: #0f172a;
-      margin-top: 8px;
-      padding-left: 0;
-    }
-
-    /* session items mirror task-item visuals */
-    .session-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #f1f5f9;
-      padding: 12px 16px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      transition: all 0.3s ease;
-      cursor: grab;
-      border: 2px solid transparent;
-    }
-
-    .session-item .session-info {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 4px;
-    }
-
-    .session-item .session-name {
-      font-weight: 600;
-      color: #0b2447;
-    }
-
-    .session-item .session-date {
-      font-size: 0.85rem;
-      color: #64748b;
-    }
-    /* Goals section styles */
+    
     .goals-section {width:90%;max-width:980px;margin:12px auto 60px;}
     .goals-card {background:#fff;border-radius:12px;padding:18px;box-shadow:0 4px 12px rgba(0,0,0,0.08);}
     .goals-controls {display:flex;gap:10px;align-items:center;margin-bottom:12px;}
     .goals-controls input[type="text"]{flex:1;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px}
     .goals-controls select{padding:10px;border-radius:8px;border:1px solid #cbd5e1}
+    .goals-controls button{background:#00bfa6;color:#fff;border:none;padding:10px 18px;border-radius:30px;cursor:pointer;font-weight:600;box-shadow:0 4px 10px rgba(0,0,0,0.08);transition:all 0.3s ease}
+    .goals-controls button:hover{transform:translateY(-3px);box-shadow:0 6px 14px rgba(0,0,0,0.12)}
     .goal-columns{display:flex;gap:16px;justify-content:space-between;align-items:flex-start}
     .goal-column{flex:1;min-width:180px}
     .goal-column h4{margin:0 0 8px 0;color:#0b2447}
     .goal-list{list-style:none;padding:0;margin:0}
-    .goal-item{display:flex;justify-content:space-between;align-items:center;background:#f8fafc;padding:10px;border-radius:10px;margin-bottom:8px}
+    .goal-item{display:flex;justify-content:space-between;align-items:center;background:#f8fafc;padding:10px;border-radius:10px;margin-bottom:8px;cursor:grab}
+    .goal-item.dragging{opacity:0.5}
     .goal-item .goal-title{font-weight:600;color:#0b2447}
-    .goal-actions button{border:none;border-radius:8px;padding:6px 10px;cursor:pointer}
-    /* Responsive: stack major sections vertically on small screens (mobile) */
-  /* Broaden mobile breakpoint to ensure phones and narrow devices use column layout */
-  @media (max-width: 1024px) {
-      /* Ensure wrapper rows become vertical stacks so every card is top-to-bottom */
-      .timer-section, .tasks-row, .goal-columns, .reports-wrap {flex-direction: column;align-items: stretch;gap: 18px;margin: 24px auto;width: 94%;max-width: 980px;}
-
-      /* Make each card full width and flow vertically */
-      .timer-card, .tasks-section, .session-log, .goals-card, .report-card {max-width: 100%;width: 100%;margin: 0;}
-
-      /* Specific tweaks for timer area */
+    .goal-actions{display:flex;gap:8px}
+    .goal-actions button{border:none;border-radius:30px;padding:8px 14px;cursor:pointer;font-weight:600;transition:all 0.2s ease;box-shadow:0 3px 8px rgba(0,0,0,0.08)}
+    .goal-actions .edit-btn{background:#0b2447;color:#fff}
+    .goal-actions .edit-btn:hover{background:#1e3a8a;transform:translateY(-3px)}
+    .goal-actions .delete-btn{background:#ef4444;color:#fff}
+    .goal-actions .delete-btn:hover{background:#dc2626;transform:translateY(-3px)}
+    @media (max-width: 1024px) {
+      .timer-section, .goal-columns, .reports-wrap, .sessions-section {flex-direction: column;align-items: stretch;gap: 18px;margin: 24px auto;width: 94%;max-width: 980px;}
+      .timer-card, .goals-card, .report-card, .session-log {max-width: 100%;width: 100%;margin: 0;}
       .timer-section {align-items: center;padding: 0;}
       .timer-card {text-align: left;}
-
-      /* Make hero buttons stack and stretch on mobile for easier tapping */
       .hero-buttons {flex-direction: column;gap: 12px;}
       .hero-buttons button {width: 100%;max-width: 420px;margin: 0 auto;padding: 12px 20px;border-radius: 12px;}
-
-      /* Goals: stack columns vertically */
       .goal-columns {flex-direction: column;gap: 12px;}
       .goal-column {min-width: 100%;}
-
-      /* Reports card full width */
       .reports-wrap {width: 94%;padding: 0;}
       .report-card {width: 100%;}
-
-      /* Reduce oversized time on mobile to fit comfortably */
       .time {font-size: 40px;}
-
-      /* Navbar: tighten spacing and ensure readable on small screens */
       .nav-container {max-width: 96%;padding: 10px 6px;}
       nav ul {gap: 12px;flex-wrap: wrap;}
       nav ul li a {font-size: 0.95rem;padding:6px 4px;}
     }
-    @media (max-width: 768px) {
-  /* Make timer and input buttons fit smaller screens */
-  .controls {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .controls button {
-    flex: 1 1 45%;
-    padding: 10px 0;
-    font-size: 0.95rem;
-  }
-
-  /* Auto Start toggle below buttons for clean layout */
-  .controls .auto-start {
-    width: 100%;
-    justify-content: center;
-    margin-top: 6px;
-  }
-
-  .task-input {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .task-input input,
-  .task-input button {
-    width: 100%;
-  }
-
-  .task-input button {
-    padding: 10px 0;
-  }
-
-  /* Goal and session buttons */
-  .goals-controls {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .goals-controls input,
-  .goals-controls select,
-  .goals-controls button {
-    width: 100%;
-  }
-
-  /* Make timer text smaller to fit */
-  .time {
-    font-size: 40px;
-  }
-
-  /* Prevent horizontal scroll on mobile */
-  body {
-    overflow-x: hidden;
-  }
-}
-    /* Footer styling */
     .site-footer {background: #000; color: #e6e6e6; padding: 18px 0; text-align: center; margin-top: 30px;}
     .site-footer .footer-container {max-width: 1100px; margin: 0 auto; padding: 0 20px; font-size: 0.95rem; opacity: 0.95}
     .site-footer a {color: #9ee7d8; text-decoration: none;}
+    .auth-buttons {display: flex;gap: 1rem;}
+    .btn-signin, .btn-signup {padding: 0.5rem 1rem;border: none;border-radius: 5px;cursor: pointer;font-weight: 500;text-decoration: none;}
+    .btn-signin {background-color: #eee;color: #333;}
+    .btn-signup {background-color: #00bfa6;color: #fff;}
   </style>
 </head>
 <body>
   <header class="navbar">
     <div class="nav-container">
       <div class="logo">
-  <img src="Focus Flow logo.png" alt="Focus Flow Logo">
+        <img src="Focus Flow logo.png" alt="Focus Flow Logo">
         <span>FOCUS FLOW</span>
       </div>
       <nav>
         <ul id="nav-list">
           <li><a href="#pomodoro" class="active">Pomodoro</a></li>
-          <li><a href="#tasks">Tasks</a></li>
           <li><a href="#sessions">Sessions</a></li>
           <li><a href="#reports">Reports</a></li>
           <li><a href="#goals">Goals</a></li>
           <div class="underline"></div>
         </ul>
       </nav>
+      <div class="auth-buttons">
+        <a href="signin.html" class="btn-signin">Sign In</a>
+        <a href="signup.html" class="btn-signup">Sign Up</a>
+      </div>
     </div>
   </header>
 
@@ -408,7 +299,6 @@
     <h1>Stay Focused. Track Progress. Achieve Goals.</h1>
     <div class="hero-buttons">
       <button id="startFocus">Start Focusing</button>
-      <button class="secondary" id="heroAddTask">Add Task</button>
     </div>
   </section>
 
@@ -449,23 +339,9 @@
     </div>
   </section>
 
-  <!-- Tasks row: My Tasks + Session Recorder -->
-  <div class="tasks-row">
-    <div class="tasks-section" id="tasks">
-      <div class="tasks-header">
-        <h3>My Tasks</h3>
-        <button id="deleteAll">Delete All</button>
-      </div>
-
-      <div class="task-input">
-        <input type="text" id="taskInput" placeholder="Add a new task...">
-        <button id="addTask">Add</button>
-      </div>
-
-      <ul class="task-list" id="taskList"></ul>
-    </div>
-
-  <div class="session-log" id="sessions">
+  <!-- Sessions Section -->
+  <div class="sessions-section" id="sessions">
+    <div class="session-log">
       <div class="tasks-header">
         <h3>Sessions</h3>
         <div>
@@ -478,14 +354,71 @@
         <button id="addSession">Add</button>
       </div>
 
-      <!-- Record Now button removed per request -->
-
       <ol class="session-list" id="sessionList" style="padding-left:0; margin-top:12px;"></ol>
     </div>
   </div>
 
+  <div class="goals-section" id="goals">
+    <div class="goals-card">
+      <h3 style="margin:0 0 12px 0;color:#0b2447;text-align:left;">Goals</h3>
+      <div class="goals-controls">
+        <input type="text" id="goalInput" placeholder="Add a goal (e.g. Finish report)" />
+        <select id="goalPriority">
+          <option value="high">High</option>
+          <option value="medium" selected>Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <button id="addGoal">Add Goal</button>
+      </div>
+
+      <div class="goal-columns">
+        <div class="goal-column">
+          <h4>High Priority</h4>
+          <ul class="goal-list" id="goalsHigh"></ul>
+        </div>
+        <div class="goal-column">
+          <h4>Medium Priority</h4>
+          <ul class="goal-list" id="goalsMedium"></ul>
+        </div>
+        <div class="goal-column">
+          <h4>Low Priority</h4>
+          <ul class="goal-list" id="goalsLow"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reports-wrap" id="reports" style="width:90%;max-width:980px;margin:20px auto 60px;display:flex;justify-content:center;">
+    <div class="report-card" style="width:100%;background:#fff;border-radius:12px;padding:18px;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+      <h3 style="margin:0 0 12px 0;color:#0b2447;text-align:left;">Reports</h3>
+      <div style="display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
+        <div style="flex:1;min-width:220px;">
+          <div style="color:#64748b;font-size:0.9rem;margin-bottom:6px;">Total tracked time (HH:MM:SS)</div>
+          <div id="reportTotalTime" style="font-size:1.2rem;font-weight:700;color:#0b2447;">00:00:00</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
+        <div style="flex:1;min-width:160px;">
+          <div style="color:#64748b;font-size:0.9rem;margin-bottom:6px;">Questions total time</div>
+          <div id="reportQuestionTotal" style="font-size:1.1rem;font-weight:700;color:#0b2447;">00:00:00</div>
+        </div>
+        <div style="flex:1;min-width:160px;text-align:center;">
+          <div style="color:#64748b;font-size:0.9rem;margin-bottom:6px;">Average per question</div>
+          <div id="reportQuestionAvg" style="font-size:1.1rem;font-weight:700;color:#00bfa6;">00:00</div>
+        </div>
+        <div style="flex:1;min-width:120px;text-align:right;">
+          <div style="color:#64748b;font-size:0.9rem;margin-bottom:6px;">Number of questions</div>
+          <div id="reportQuestionCount" style="font-size:1.1rem;font-weight:700;color:#0b2447;">0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-container">© 2025 Focus Flow — This website is made by <strong>Innovative Web Design </strong> — <a href="https://innovativewebdesign.netlify.app" target="_blank" rel="noopener noreferrer">innovativewebdesign.netlify.app</a></div>
+  </footer>
+
   <script>
-    // Navbar underline animation
     const links = document.querySelectorAll('nav ul li a');
     const underline = document.querySelector('.underline');
     function moveUnderline(link) {
@@ -495,24 +428,15 @@
     }
     links.forEach(link => {
       link.addEventListener('click', function(e) {
-        // prevent default anchor jump so we can smooth-scroll and keep underline placement
         e.preventDefault();
         links.forEach(l => l.classList.remove('active'));
         this.classList.add('active');
         moveUnderline(this);
-
-        // Smooth scroll the target section into view; center vertically for better UX (esp. Tasks)
         const href = this.getAttribute('href');
         if (href && href.startsWith('#')) {
           const target = document.querySelector(href);
           if (target) {
-            try {
-              target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } catch (err) {
-              // fallback for older browsers
-              const top = target.getBoundingClientRect().top + window.pageYOffset - (window.innerHeight / 2) + (target.offsetHeight / 2);
-              window.scrollTo({ top, behavior: 'smooth' });
-            }
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
         }
       });
@@ -522,13 +446,12 @@
       moveUnderline(activeLink);
     });
 
-    // Pomodoro Timer Logic
     let duration = 25 * 60;
     let timeLeft = duration;
     let timer = null;
     let running = false;
-  let timerStart = null; // timestamp when pomodoro started (ms)
-  let totalPomodoroSeconds = 0; // accumulated focused seconds from pomodoro
+    let timerStart = null;
+    let totalPomodoroSeconds = 0;
 
     const timeEl = document.getElementById('time');
     const statusEl = document.getElementById('status');
@@ -558,7 +481,6 @@
           updateReports();
         } else {
           clearInterval(timer);
-          // pomodoro finished, accumulate elapsed
           if (timerStart) {
             const elapsed = Math.round((Date.now() - timerStart) / 1000);
             totalPomodoroSeconds += elapsed;
@@ -574,7 +496,6 @@
     function pauseTimer() {
       clearInterval(timer);
       running = false;
-      // accumulate elapsed time since last start
       if (timerStart) {
         const elapsed = Math.round((Date.now() - timerStart) / 1000);
         totalPomodoroSeconds += elapsed;
@@ -587,7 +508,6 @@
     function resetTimer() {
       clearInterval(timer);
       running = false;
-      // accumulate elapsed if running
       if (timerStart) {
         const elapsed = Math.round((Date.now() - timerStart) / 1000);
         totalPomodoroSeconds += elapsed;
@@ -619,31 +539,17 @@
     pauseBtn.onclick = pauseTimer;
     resetBtn.onclick = resetTimer;
     applyBtn.onclick = applyMinutes;
-    // Hero button starts the Pomodoro timer
+
     const heroStartBtn = document.getElementById('startFocus');
-    heroStartBtn && heroStartBtn.addEventListener('click', () => {
-      // if timer not running, start; if already running, do nothing
-      startTimer();
-    });
-    // Hero Add Task button: focus task input and scroll to tasks
-    const heroAddBtn = document.getElementById('heroAddTask');
-    heroAddBtn && heroAddBtn.addEventListener('click', () => {
-      const taskInputEl = document.getElementById('taskInput');
-      if (taskInputEl) {
-        taskInputEl.focus();
-        // scroll the tasks area into view for the user
-        const tasksSection = document.getElementById('tasks') || document.querySelector('.tasks-section');
-        if (tasksSection) tasksSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    });
+    heroStartBtn && heroStartBtn.addEventListener('click', startTimer);
 
     updateTime();
 
-    // Question Timer Logic
     let qTimer = null;
     let qRunning = false;
     let qSeconds = 0;
     let questionCount = 0;
+    let totalQuestionSeconds = 0;
 
     const qtimeEl = document.getElementById('qtime');
     const qstatusEl = document.getElementById('qstatus');
@@ -684,20 +590,14 @@
       const entry = document.createElement('div');
       entry.textContent = `Question ${questionCount}: ${min}:${sec}`;
       questionLog.appendChild(entry);
-      // add question time to totals
-      totalQuestionSeconds = (typeof totalQuestionSeconds !== 'undefined') ? totalQuestionSeconds + qSeconds : qSeconds;
+      totalQuestionSeconds += qSeconds;
       qSeconds = 0;
       updateQTime();
-      // update reports immediately
       updateReports();
 
-      // If Auto Start is enabled, start the next question timer immediately
       const autoStartEl = document.getElementById('autoStart');
       if (autoStartEl && autoStartEl.checked) {
-        // small timeout to ensure UI updates before starting
-        setTimeout(() => {
-          startQTimer();
-        }, 120);
+        setTimeout(startQTimer, 120);
       } else {
         qstatusEl.textContent = 'Ready for next question';
       }
@@ -707,12 +607,9 @@
     qpauseBtn.onclick = pauseQTimer;
     qsaveBtn.onclick = saveQTimer;
 
-    // Reset saved question log and totals
     const qResetSavedBtn = document.getElementById('qResetSaved');
     qResetSavedBtn && qResetSavedBtn.addEventListener('click', () => {
-      // clear visual log
       if (questionLog) questionLog.innerHTML = '';
-      // reset counters
       totalQuestionSeconds = 0;
       questionCount = 0;
       qSeconds = 0;
@@ -722,8 +619,6 @@
 
     updateQTime();
 
-    // Reports: completed tasks and total timer
-    let totalQuestionSeconds = 0;
     function formatTimeHMS(totalSeconds) {
       const hrs = Math.floor(totalSeconds / 3600);
       const mins = Math.floor((totalSeconds % 3600) / 60);
@@ -732,150 +627,33 @@
     }
 
     function updateReports() {
-      // tasks completed
-      const completed = document.querySelectorAll('.task-item.completed').length;
-      const tasksEl = document.getElementById('reportTasksCompleted');
-      if (tasksEl) tasksEl.textContent = String(completed);
+      const runningPomodoro = (running && timerStart) ? Math.round((Date.now() - timerStart) / 1000) : 0;
+      const totalSeconds = totalPomodoroSeconds + runningPomodoro;
+      const totalEl = document.getElementById('reportTotalTime');
+      if (totalEl) totalEl.textContent = formatTimeHMS(totalSeconds);
 
-  // total timer = pomodoro only (exclude question timer)
-  // include currently-running pomodoro time using elapsed since timerStart
-  const runningPomodoro = (running && timerStart) ? Math.round((Date.now() - timerStart) / 1000) : 0;
-  const totalSeconds = (totalPomodoroSeconds || 0) + runningPomodoro;
-  const totalEl = document.getElementById('reportTotalTime');
-  if (totalEl) totalEl.textContent = formatTimeHMS(totalSeconds);
+      const qRunningSeconds = qRunning ? qSeconds : 0;
+      const questionsTotalSeconds = totalQuestionSeconds + qRunningSeconds;
+      const qAvg = questionCount > 0 ? Math.round(questionsTotalSeconds / questionCount) : 0;
 
-  // Question stats: include saved totalQuestionSeconds plus currently-running question seconds
-  const qRunningSeconds = (typeof qRunning !== 'undefined' && qRunning) ? qSeconds : 0;
-  const questionsTotalSeconds = (typeof totalQuestionSeconds !== 'undefined' ? totalQuestionSeconds : 0) + qRunningSeconds;
-  const qCount = (typeof questionCount !== 'undefined' ? questionCount : 0);
-  const qAvg = qCount > 0 ? Math.round(questionsTotalSeconds / qCount) : 0;
-
-  const qTotalEl = document.getElementById('reportQuestionTotal');
-  const qAvgEl = document.getElementById('reportQuestionAvg');
-  const qCountEl = document.getElementById('reportQuestionCount');
-  if (qTotalEl) qTotalEl.textContent = formatTimeHMS(questionsTotalSeconds);
-  if (qAvgEl) qAvgEl.textContent = formatTimeHMS(qAvg);
-  if (qCountEl) qCountEl.textContent = String(qCount);
+      const qTotalEl = document.getElementById('reportQuestionTotal');
+      const qAvgEl = document.getElementById('reportQuestionAvg');
+      const qCountEl = document.getElementById('reportQuestionCount');
+      if (qTotalEl) qTotalEl.textContent = formatTimeHMS(questionsTotalSeconds);
+      if (qAvgEl) qAvgEl.textContent = formatTimeHMS(qAvg);
+      if (qCountEl) qCountEl.textContent = String(questionCount);
     }
 
-    // -- Task Manager Logic (appended from Task manager.txt)
-    const taskInput = document.getElementById('taskInput');
-    const addTaskBtn = document.getElementById('addTask');
-    const taskList = document.getElementById('taskList');
-    const deleteAllBtn = document.getElementById('deleteAll');
-    let selectedTask = null;
-
-    addTaskBtn.addEventListener('click', addTask);
-    taskInput.addEventListener('keypress', e => {
-      if (e.key === 'Enter') addTask();
-    });
-
-    function addTask() {
-      const text = taskInput.value.trim();
-      if (!text) return;
-
-      const li = document.createElement('li');
-      li.className = 'task-item';
-      li.draggable = true;
-      li.innerHTML = `
-        <div class="task-info">
-          <input type="checkbox" class="done-checkbox">
-          <span>${text}</span>
-        </div>
-        <div class="task-actions">
-          <button class="edit-btn">✎</button>
-          <button class="delete-btn">Delete</button>
-        </div>`;
-
-      const checkbox = li.querySelector('.done-checkbox');
-      const span = li.querySelector('span');
-      const editBtn = li.querySelector('.edit-btn');
-
-      checkbox.addEventListener('change', () => {
-        li.classList.toggle('completed', checkbox.checked);
-        updateReports();
-      });
-
-      editBtn.addEventListener('click', e => {
-        e.stopPropagation();
-        renameTask(span);
-      });
-
-      li.querySelector('.delete-btn').addEventListener('click', e => {
-        e.stopPropagation();
-        li.remove();
-        updateReports();
-      });
-
-      li.addEventListener('click', () => selectTask(li));
-
-      addDragAndDrop(li);
-      taskList.appendChild(li);
-      taskInput.value = '';
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[s]);
     }
 
-    function selectTask(task) {
-      if (selectedTask && selectedTask !== task) {
-        selectedTask.classList.remove('selected');
-      }
-      if (task.classList.contains('selected')) {
-        task.classList.remove('selected');
-        selectedTask = null;
-      } else {
-        task.classList.add('selected');
-        selectedTask = task;
-      }
+    function capitalize(s) {
+      return String(s||'').charAt(0).toUpperCase() + String(s||'').slice(1);
     }
 
-    function renameTask(span) {
-      const currentText = span.textContent;
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.value = currentText;
-      input.className = 'edit-input';
-      span.replaceWith(input);
-      input.focus();
-
-      input.addEventListener('blur', () => {
-        const newSpan = document.createElement('span');
-        newSpan.textContent = input.value.trim() || currentText;
-        input.replaceWith(newSpan);
-      });
-
-      input.addEventListener('keypress', e => {
-        if (e.key === 'Enter') input.blur();
-      });
-    }
-
-    deleteAllBtn.addEventListener('click', () => {
-      taskList.innerHTML = '';
-      updateReports();
-    });
-
-    function addDragAndDrop(li) {
-      li.addEventListener('dragstart', () => {
-        li.classList.add('dragging');
-      });
-
-      li.addEventListener('dragend', () => {
-        li.classList.remove('dragging');
-      });
-    }
-
-    taskList.addEventListener('dragover', e => {
-      e.preventDefault();
-      const dragging = document.querySelector('.dragging');
-      const afterElement = getDragAfterElement(taskList, e.clientY);
-      if (afterElement == null) {
-        taskList.appendChild(dragging);
-      } else {
-        taskList.insertBefore(dragging, afterElement);
-      }
-    });
-
-    function getDragAfterElement(container, y) {
-      const draggableElements = [...container.querySelectorAll('.task-item:not(.dragging)')];
-
+    function getDragAfterElement(container, y, selector) {
+      const draggableElements = [...container.querySelectorAll(selector || '.goal-item:not(.dragging)')];
       return draggableElements.reduce((closest, child) => {
         const box = child.getBoundingClientRect();
         const offset = y - box.top - box.height / 2;
@@ -887,41 +665,80 @@
       }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
-    // Session recorder logic (named sessions like tasks)
-  let sessionCount = 0;
-  const clearSessionsBtn = document.getElementById('clearSessions');
+    // Sessions Logic
+    let sessionCount = 0;
+    const clearSessionsBtn = document.getElementById('clearSessions');
     const sessionList = document.getElementById('sessionList');
     const sessionInput = document.getElementById('sessionInput');
     const addSessionBtn = document.getElementById('addSession');
 
-    function formatDate(d) {
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth() + 1).padStart(2, '0');
-      const dd = String(d.getDate()).padStart(2, '0');
-      const hh = String(d.getHours()).padStart(2, '0');
-      const min = String(d.getMinutes()).padStart(2, '0');
-      const ss = String(d.getSeconds()).padStart(2, '0');
-      return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+    function updateSessionNumbers() {
+      const sessionItems = sessionList.querySelectorAll('.session-item');
+      sessionItems.forEach((li, index) => {
+        const sessionNameDiv = li.querySelector('.session-name');
+        const currentName = sessionNameDiv.textContent.replace(/^\d+\.\s*/, '');
+        sessionNameDiv.textContent = `${index + 1}. ${currentName}`;
+      });
+      sessionCount = sessionItems.length;
     }
 
-    function createSessionEntry(name) {
-      sessionCount++;
-      const now = new Date();
+    function saveSessionsToLocalStorage() {
+      const sessions = [];
+      sessionList.querySelectorAll('.session-item').forEach(li => {
+        const name = li.querySelector('.session-name').textContent.replace(/^\d+\.\s*/, '');
+        const tasks = [];
+        li.querySelectorAll('.task-item').forEach(taskLi => {
+          tasks.push(taskLi.querySelector('span').textContent);
+        });
+        sessions.push({ name, tasks });
+      });
+      localStorage.setItem('sessions', JSON.stringify(sessions));
+    }
+
+    function loadSessionsFromLocalStorage() {
+      const sessions = JSON.parse(localStorage.getItem('sessions') || '[]');
+      sessions.forEach(session => {
+        createSessionEntry(session.name, session.tasks);
+      });
+    }
+
+    function createSessionEntry(name, tasks = []) {
       const li = document.createElement('li');
       li.className = 'session-item';
       li.draggable = true;
       li.innerHTML = `
-        <div class="session-info">
-          <div class="session-name">${sessionCount}. ${escapeHtml(name)}</div>
-          <div class="session-date">${formatDate(now)}</div>
+        <div class="session-header">
+          <div class="session-info">
+            <button class="toggle-tasks-btn">▶</button>
+            <div class="session-name">${escapeHtml(name)}</div>
+          </div>
+          <div class="task-actions">
+            <button class="edit-btn">Edit</button>
+            <button class="delete-btn">Delete</button>
+          </div>
         </div>
-        <div class="task-actions">
-          <button class="edit-btn">✎</button>
-          <button class="delete-btn">Delete</button>
+        <div class="session-tasks-container" style="display: none;">
+          <div class="task-input-inline" style="margin-bottom: 10px;">
+            <input type="text" class="session-task-input" placeholder="Add a task">
+            <button class="add-task-to-session-btn">Add</button>
+          </div>
+          <ul class="task-list-for-session" style="list-style: none; padding: 0;"></ul>
         </div>`;
 
       const editBtn = li.querySelector('.edit-btn');
       const deleteBtn = li.querySelector('.delete-btn');
+      const addTaskToSessionBtn = li.querySelector('.add-task-to-session-btn');
+      const sessionTaskInput = li.querySelector('.session-task-input');
+      const taskListForSession = li.querySelector('.task-list-for-session');
+      const toggleBtn = li.querySelector('.toggle-tasks-btn');
+      const tasksContainer = li.querySelector('.session-tasks-container');
+
+      toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isVisible = tasksContainer.style.display === 'block';
+        tasksContainer.style.display = isVisible ? 'none' : 'block';
+        toggleBtn.textContent = isVisible ? '▶' : '▼';
+      });
 
       editBtn.addEventListener('click', e => {
         e.stopPropagation();
@@ -931,19 +748,83 @@
       deleteBtn.addEventListener('click', e => {
         e.stopPropagation();
         li.remove();
-        updateReports();
+        updateSessionNumbers();
+        saveSessionsToLocalStorage();
       });
 
-      addDragAndDrop(li);
+      addTaskToSessionBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const taskText = sessionTaskInput.value.trim();
+        if (taskText) {
+          addTaskToSession(taskListForSession, taskText);
+          sessionTaskInput.value = '';
+          saveSessionsToLocalStorage();
+          tasksContainer.style.display = 'block';
+          toggleBtn.textContent = '▼';
+        }
+      });
+
+      tasks.forEach(taskText => {
+        addTaskToSession(taskListForSession, taskText);
+      });
+
+      if (tasks.length > 0) {
+        tasksContainer.style.display = 'block';
+        toggleBtn.textContent = '▼';
+      }
+
+      addDragAndDropSession(li);
       sessionList.appendChild(li);
-        updateReports();
+      updateSessionNumbers();
+
+      taskListForSession.addEventListener('dragover', e => {
+        e.preventDefault();
+        const dragging = document.querySelector('.dragging');
+        const afterElement = getDragAfterElement(taskListForSession, e.clientY, '.task-item:not(.dragging)');
+        if (afterElement == null) {
+          taskListForSession.appendChild(dragging);
+        } else {
+          taskListForSession.insertBefore(dragging, afterElement);
+        }
+        saveSessionsToLocalStorage();
+      });
+    }
+
+    function addTaskToSession(taskList, taskText) {
+      const taskLi = document.createElement('li');
+      taskLi.className = 'task-item';
+      taskLi.draggable = true;
+      taskLi.innerHTML = `
+        <div class="task-info">
+          <input type="checkbox" class="done-checkbox">
+          <span>${escapeHtml(taskText)}</span>
+        </div>
+        <div class="task-actions">
+          <button class="delete-btn">Delete</button>
+        </div>`;
+
+      addDragAndDropSession(taskLi);
+
+      const checkbox = taskLi.querySelector('.done-checkbox');
+      checkbox.addEventListener('change', () => {
+        taskLi.classList.toggle('completed', checkbox.checked);
+        saveSessionsToLocalStorage();
+      });
+
+      taskLi.querySelector('.delete-btn').addEventListener('click', e => {
+        e.stopPropagation();
+        taskLi.remove();
+        saveSessionsToLocalStorage();
+      });
+
+      taskList.appendChild(taskLi);
     }
 
     function addSession() {
       const name = (sessionInput.value || '').trim() || 'Unnamed Session';
       createSessionEntry(name);
       sessionInput.value = '';
-      updateReports();
+      saveSessionsToLocalStorage();
     }
 
     function renameSession(li) {
@@ -952,7 +833,9 @@
       const input = document.createElement('input');
       input.type = 'text';
       input.value = currentText;
-      input.className = 'edit-input';
+      input.style.padding = '4px 8px';
+      input.style.border = '1px solid #cbd5e1';
+      input.style.borderRadius = '6px';
       nameDiv.replaceWith(input);
       input.focus();
 
@@ -960,11 +843,10 @@
         const newName = input.value.trim() || currentText;
         const newDiv = document.createElement('div');
         newDiv.className = 'session-name';
-        // Keep existing serial number prefix
-        const serial = li.querySelector('.session-name') ? li.querySelector('.session-name').textContent.split('.')[0] : sessionCount;
-        newDiv.textContent = `${serial}. ${newName}`;
+        newDiv.textContent = newName;
         input.replaceWith(newDiv);
-        updateReports();
+        updateSessionNumbers();
+        saveSessionsToLocalStorage();
       });
 
       input.addEventListener('keypress', e => {
@@ -972,43 +854,77 @@
       });
     }
 
-    // Escape HTML for inserted names
-    function escapeHtml(str) {
-      return String(str).replace(/[&<>"']/g, function (s) {
-        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[s];
-      });
-    }
-
     addSessionBtn && addSessionBtn.addEventListener('click', addSession);
-    sessionInput && sessionInput.addEventListener('keypress', e => { if (e.key === 'Enter') addSession(); });
-
-    // recordBtn removed; use Add button to create named sessions instead
+    sessionInput && sessionInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') addSession();
+    });
 
     clearSessionsBtn && clearSessionsBtn.addEventListener('click', () => {
       sessionList.innerHTML = '';
       sessionCount = 0;
+      saveSessionsToLocalStorage();
     });
 
-    // allow dragging within session list (similar to tasks)
+    function addDragAndDropSession(li) {
+      li.addEventListener('dragstart', () => {
+        li.classList.add('dragging');
+      });
+
+      li.addEventListener('dragend', () => {
+        li.classList.remove('dragging');
+      });
+    }
+
     sessionList && sessionList.addEventListener('dragover', e => {
       e.preventDefault();
       const dragging = document.querySelector('.dragging');
-      const afterElement = getDragAfterElement(sessionList, e.clientY);
+      const afterElement = getDragAfterElement(sessionList, e.clientY, '.session-item:not(.dragging)');
       if (afterElement == null) {
         sessionList.appendChild(dragging);
       } else {
         sessionList.insertBefore(dragging, afterElement);
       }
+      saveSessionsToLocalStorage();
     });
 
-    // Goals logic - initialize after DOM ready so goal inputs exist when we wire handlers
+    // Goals Logic
     document.addEventListener('DOMContentLoaded', () => {
+      loadSessionsFromLocalStorage();
+
       const goalInput = document.getElementById('goalInput');
       const goalPriority = document.getElementById('goalPriority');
       const addGoalBtn = document.getElementById('addGoal');
       const goalsHigh = document.getElementById('goalsHigh');
       const goalsMedium = document.getElementById('goalsMedium');
       const goalsLow = document.getElementById('goalsLow');
+
+      function addDragAndDrop(li) {
+        li.addEventListener('dragstart', () => li.classList.add('dragging'));
+        li.addEventListener('dragend', () => {
+          li.classList.remove('dragging');
+          updateGoalPriority(li);
+        });
+      }
+
+      function updateGoalPriority(li) {
+        if (!li) return;
+        const badge = li.querySelector('.goal-priority');
+        if (!badge) return;
+        const parentId = li.parentElement && li.parentElement.id;
+        if (parentId === 'goalsHigh') {
+          badge.textContent = 'High';
+          badge.style.background = '#ffe4e6';
+          badge.style.color = '#9b1232';
+        } else if (parentId === 'goalsMedium') {
+          badge.textContent = 'Medium';
+          badge.style.background = '#fffbeb';
+          badge.style.color = '#92400e';
+        } else if (parentId === 'goalsLow') {
+          badge.textContent = 'Low';
+          badge.style.background = '#ecfeff';
+          badge.style.color = '#065f46';
+        }
+      }
 
       function createGoalItem(text, priority) {
         const li = document.createElement('li');
@@ -1020,8 +936,10 @@
             <span class="goal-priority" style="background:#e6fffa;color:#006b5a;padding:4px 8px;border-radius:999px;font-size:0.8rem">${capitalize(priority)}</span>
           </div>
           <div class="goal-actions"><button class="edit-btn">✎</button><button class="delete-btn">Delete</button></div>`;
+
         const editBtn = li.querySelector('.edit-btn');
         const deleteBtn = li.querySelector('.delete-btn');
+
         editBtn.addEventListener('click', e => {
           e.stopPropagation();
           const titleDiv = li.querySelector('.goal-title');
@@ -1029,7 +947,9 @@
           const input = document.createElement('input');
           input.type = 'text';
           input.value = current;
-          input.className = 'edit-input';
+          input.style.padding = '4px 8px';
+          input.style.border = '1px solid #cbd5e1';
+          input.style.borderRadius = '6px';
           titleDiv.replaceWith(input);
           input.focus();
           input.addEventListener('blur', () => {
@@ -1040,10 +960,13 @@
           });
           input.addEventListener('keypress', ev => { if (ev.key === 'Enter') input.blur(); });
         });
-        deleteBtn.addEventListener('click', e => { e.stopPropagation(); li.remove(); });
+
+        deleteBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          li.remove();
+        });
+
         addDragAndDrop(li);
-        // when drag ends, ensure priority badge reflects the column it's dropped into
-        li.addEventListener('dragend', () => updateGoalPriority(li));
         return li;
       }
 
@@ -1055,105 +978,27 @@
         if (priority === 'high') goalsHigh.appendChild(li);
         else if (priority === 'medium') goalsMedium.appendChild(li);
         else goalsLow.appendChild(li);
-        // ensure badge matches actual column
         updateGoalPriority(li);
         goalInput.value = '';
       }
 
-      function capitalize(s){ return String(s||'').charAt(0).toUpperCase() + String(s||'').slice(1); }
-
-      function updateGoalPriority(li){
-        if (!li) return;
-        const badge = li.querySelector('.goal-priority');
-        if (!badge) return;
-        const parentId = li.parentElement && li.parentElement.id;
-        if (parentId === 'goalsHigh') { badge.textContent = 'High'; badge.style.background = '#ffe4e6'; badge.style.color = '#9b1232'; }
-        else if (parentId === 'goalsMedium') { badge.textContent = 'Medium'; badge.style.background = '#fffbeb'; badge.style.color = '#92400e'; }
-        else if (parentId === 'goalsLow') { badge.textContent = 'Low'; badge.style.background = '#ecfeff'; badge.style.color = '#065f46'; }
-        else { badge.textContent = capitalize((goalPriority && goalPriority.value) || 'medium'); badge.style.background = '#e6fffa'; badge.style.color = '#006b5a'; }
-      }
-
       addGoalBtn && addGoalBtn.addEventListener('click', addGoal);
-      goalInput && goalInput.addEventListener('keypress', e => { if (e.key === 'Enter') addGoal(); });
+      goalInput && goalInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') addGoal();
+      });
 
-      // enable dragover for goal lists
       [goalsHigh, goalsMedium, goalsLow].forEach(list => {
         list && list.addEventListener('dragover', e => {
           e.preventDefault();
           const dragging = document.querySelector('.dragging');
           const afterElement = getDragAfterElement(list, e.clientY);
-          if (afterElement == null) list.appendChild(dragging); else list.insertBefore(dragging, afterElement);
+          if (afterElement == null) list.appendChild(dragging);
+          else list.insertBefore(dragging, afterElement);
         });
       });
     });
-  </script>
-  <!-- Goals section -->
-  <div class="goals-section" id="goals">
-    <div class="goals-card">
-      <h3 style="margin:0 0 12px 0;color:#0b2447;text-align:left;">Goals</h3>
-      <div class="goals-controls">
-        <input type="text" id="goalInput" placeholder="Add a goal (e.g. Finish report)" />
-        <select id="goalPriority">
-          <option value="high">High</option>
-          <option value="medium" selected>Medium</option>
-          <option value="low">Low</option>
-        </select>
-        <button id="addGoal" style="background:#00bfa6;color:#fff;border:none;padding:10px 18px;border-radius:30px;box-shadow:0 4px 10px rgba(0,0,0,0.08);">Add Goal</button>
-      </div>
 
-      <div class="goal-columns">
-        <div class="goal-column">
-          <h4>High Priority</h4>
-          <ul class="goal-list" id="goalsHigh"></ul>
-        </div>
-        <div class="goal-column">
-          <h4>Medium Priority</h4>
-          <ul class="goal-list" id="goalsMedium"></ul>
-        </div>
-        <div class="goal-column">
-          <h4>Low Priority</h4>
-          <ul class="goal-list" id="goalsLow"></ul>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="reports-wrap" id="reports" style="width:90%;max-width:980px;margin:20px auto 60px;display:flex;justify-content:center;">
-    <div class="report-card" style="width:100%;background:#fff;border-radius:12px;padding:18px;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
-      <h3 style="margin:0 0 12px 0;color:#0b2447;text-align:left;">Reports</h3>
-      <div style="display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
-        <div style="flex:1;min-width:180px;">
-          <div style="color:#64748b;font-size:0.9rem;margin-bottom:6px;">Tasks completed</div>
-          <div id="reportTasksCompleted" style="font-size:1.4rem;font-weight:700;color:#00bfa6;">0</div>
-        </div>
-        <div style="flex:1;min-width:220px;text-align:right;">
-          <div style="color:#64748b;font-size:0.9rem;margin-bottom:6px;">Total tracked time (HH:MM:SS)</div>
-          <div id="reportTotalTime" style="font-size:1.2rem;font-weight:700;color:#0b2447;">00:00:00</div>
-        </div>
-      </div>
-      <!-- Question statistics: total time, average per question, number of questions -->
-      <div style="margin-top:12px;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
-        <div style="flex:1;min-width:160px;">
-          <div style="color:#64748b;font-size:0.9rem;margin-bottom:6px;">Questions total time</div>
-          <div id="reportQuestionTotal" style="font-size:1.1rem;font-weight:700;color:#0b2447;">00:00:00</div>
-        </div>
-        <div style="flex:1;min-width:160px;text-align:center;">
-          <div style="color:#64748b;font-size:0.9rem;margin-bottom:6px;">Average per question</div>
-          <div id="reportQuestionAvg" style="font-size:1.1rem;font-weight:700;color:#00bfa6;">00:00</div>
-        </div>
-        <div style="flex:1;min-width:120px;text-align:right;">
-          <div style="color:#64748b;font-size:0.9rem;margin-bottom:6px;">Number of questions</div>
-          <div id="reportQuestionCount" style="font-size:1.1rem;font-weight:700;color:#0b2447;">0</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script>
     if (typeof updateReports === 'function') updateReports();
   </script>
-  <footer class="site-footer">
-    <div class="footer-container">© 2025 Focus Flow — This website is made by me <strong>Innovative Web Design </strong> — <a href="https://innovativewebdesign.netlify.app" target="_blank" rel="noopener noreferrer">innovativewebdesign.netlify.app</a></div>
-  </footer>
 </body>
 </html>
-
-
